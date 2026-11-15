@@ -1,0 +1,24 @@
+# Arquivos pessoais / fora do projeto
+*.mobileconfig
+
+# Segredos e credenciais
+.env
+.env.*
+*.pem
+*.key
+.aws/
+credentials
+
+# AWS CDK / Node / Python
+cdk.out/
+node_modules/
+__pycache__/
+.venv/
+*.pyc
+cdk.context.json
+
+# Sistema / editor
+.DS_Store
+.vscode/
+.idea/
+.claude/

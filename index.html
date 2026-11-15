@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Alcance públicos com a LUMME. Entre na lista de espera e faça parte do próximo capítulo.">
+    <meta name="color-scheme" content="dark">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <meta property="og:title" content="LUMME MARKETING">
+    <meta property="og:description" content="Alcance públicos com a LUMME.">
+    <meta property="og:url" content="https://www.lummetracker.site">
+    <meta property="og:image" content="./src/logo-main.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:type" content="website">
+
+    <link rel="icon" href="./src/logo.png" type="image/png" sizes="32x32">
+    <link rel="icon" href="./src/logo.png" type="image/png" sizes="16x16">
+    <link rel="apple-touch-icon" href="./src/logo.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+
+    <title>Lançamento do Produto — Um novo capítulo</title>
+
+    <style>
+        /* ============ PALETA (inalterada) ============ */
+        :root {
+            --background: oklch(0.12 0.006 160);
+            --foreground: oklch(0.97 0.005 160);
+            --muted: oklch(0.72 0.008 160);
+            --subtle: oklch(0.76 0.008 160);
+            --accent: oklch(0.88 0.11 164);
+            --accent-foreground: oklch(0.18 0.026 160);
+            --glass: oklch(0.92 0.012 160 / .065);
+            --glass-hover: oklch(0.92 0.012 160 / .12);
+            --border: oklch(0.98 0.01 160 / .17);
+            --highlight: oklch(1 0 0 / .55);
+            --shade: oklch(0.08 0.004 160 / .65);
+            --shadow: oklch(0.04 0 0 / .3);
+            --font: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            background: var(--background);
+        }
+
+        body {
+            margin: 0;
+            color: var(--foreground);
+            font-family: var(--font);
+            letter-spacing: 0;
+            min-width: 280px;
+        }
+
+        button,
+        input {
+            font: inherit;
+        }
+
+        ::selection {
+            background: var(--accent);
+            color: var(--accent-foreground);
+        }
+
+        /* ============ FUNDO ============ */
+        .scene {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            z-index: -1;
+            background: var(--background);
+        }
+
+        .scene img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            animation: drift 24s ease-in-out infinite alternate;
+        }
+
+        /* escurece a esquerda para o texto respirar sobre o vidro */
+        .scene::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(90deg, var(--shade), transparent 62%),
+                linear-gradient(180deg, var(--shade), transparent 35%, var(--shade));
+        }
+
+        /* ============ ESTRUTURA ============ */
+        .page {
+            min-height: 100svh;
+            display: flex;
+            flex-direction: column;
+            max-width: 1440px;
+            margin: auto;
+            padding: 0 56px;
+        }
+
+        .topline {
+            height: 96px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .wordmark {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .wordmark svg {
+            width: 24px;
+            height: 24px;
+            color: var(--accent);
+        }
+
+        .edition {
+            color: var(--muted);
+            font-size: 12px;
+            padding-left: 16px;
+            border-left: 1px solid var(--border);
+        }
+
+        main {
+            flex: 1;
+            display: grid;
+            grid-template-columns: minmax(0, 1.25fr) minmax(340px, .75fr);
+            gap: 72px;
+            align-items: center;
+            padding: 40px 0 64px;
+        }
+
+        .glass {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(22px) saturate(145%);
+            box-shadow: inset 0 1px 0 var(--highlight), 0 12px 40px var(--shadow);
+        }
+
+        /* ============ COLUNA ESQUERDA ============ */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            border-radius: 30px;
+            padding: 9px 16px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--accent);
+        }
+
+        .status i {
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+        }
+
+        h1 {
+            margin: 28px 0 24px;
+            font-size: clamp(44px, 6.4vw, 96px);
+            line-height: 1.02;
+            font-weight: 300;
+            letter-spacing: -0.025em;
+            text-wrap: balance;
+        }
+
+        h1 .linha-marca {
+            display: block;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .description {
+            font-size: 17px;
+            line-height: 1.7;
+            color: var(--muted);
+            margin: 0;
+            max-width: 460px;
+        }
+
+        /* Temporizador: números grandes, separados por filetes */
+        .countdown {
+            display: flex;
+            margin-top: 48px;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            width: 100%;
+            max-width: 620px;
+        }
+
+        .time-box {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 20px 0 18px 24px;
+            border-left: 1px solid var(--border);
+        }
+
+        .time-box:first-child {
+            padding-left: 0;
+            border-left: none;
+        }
+
+        .time-box span {
+            font-size: clamp(36px, 5vw, 68px);
+            font-weight: 200;
+            line-height: 1;
+            color: var(--foreground);
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -0.02em;
+        }
+
+        .time-box small {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 10px;
+        }
+
+        /* Números de acesso */
+        .stats {
+            display: flex;
+            gap: 48px;
+            margin-top: 28px;
+        }
+
+        .visits,
+        .waitlist-count {
+            display: flex;
+            flex-direction: column-reverse;
+            gap: 4px;
+            margin: 0;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .visits svg,
+        .waitlist-count svg {
+            display: none;
+        }
+
+        .spanVerde,
+        .contador {
+            font-size: 28px;
+            font-weight: 500;
+            color: var(--accent);
+            font-variant-numeric: tabular-nums;
+            line-height: 1.1;
+        }
+
+        /* ============ PAINEL DO FORMULÁRIO ============ */
+        .caixa-espera {
+            border-radius: 20px;
+            padding: 40px 36px 34px;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            text-align: left;
+        }
+
+        .caixa-espera h2 {
+            margin: 0 0 8px;
+            font-size: 28px;
+            line-height: 1.2;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+        }
+
+        .caixa-espera .apoio {
+            margin: 0 0 28px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--muted);
+        }
+
+        .email-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .email-input {
+            width: 100%;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0 20px;
+            color: var(--foreground);
+            font-size: 15px;
+            outline: none;
+            min-height: 58px;
+            transition: background .3s, border-color .3s;
+        }
+
+        .email-input:focus {
+            border-color: var(--accent);
+            background: var(--glass-hover);
+        }
+
+        .email-input::placeholder {
+            color: var(--muted);
+        }
+
+        /* botão sólido: a ação principal da página */
+        .waitlist-button {
+            position: relative;
+            isolation: isolate;
+            overflow: hidden;
+            background: var(--accent);
+            color: var(--accent-foreground);
+            border: 1px solid var(--accent);
+            border-radius: 10px;
+            padding: 0 24px;
+            min-height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: none;
+            backdrop-filter: none;
+            transition: filter .3s, transform .3s;
+        }
+
+        .waitlist-button:hover {
+            filter: brightness(1.08);
+            transform: translateY(-2px);
+        }
+
+        .waitlist-button:active {
+            transform: translateY(0);
+        }
+
+        .waitlist-button:disabled {
+            cursor: progress;
+            filter: saturate(.6);
+        }
+
+        .waitlist-button:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 4px;
+        }
+
+        .waitlist-button svg {
+            display: none;
+        }
+
+        .lgpd-container {
+            margin-top: 16px;
+            font-size: 12px;
+            line-height: 1.55;
+            color: var(--muted);
+            text-align: left;
+        }
+
+        .lgpd-container label {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .lgpd-container input {
+            margin-top: 2px;
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+            accent-color: var(--accent);
+        }
+
+        /* ============ RODAPÉ ============ */
+        footer {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 40px;
+            padding: 24px 0 30px;
+            border-top: 1px solid var(--border);
+            font-size: 11px;
+            line-height: 1.6;
+            color: var(--muted);
+            text-shadow: 0 1px 4px var(--background);
+        }
+
+        .footer-note {
+            color: var(--subtle);
+        }
+
+        .footer-note:last-child {
+            max-width: 560px;
+            text-align: right;
+        }
+
+        /* ============ MODAL ============ */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: oklch(0.15 0.01 160);
+            border: 1px solid var(--accent);
+            border-radius: 16px;
+            padding: 36px 32px 32px;
+            max-width: 420px;
+            width: 90%;
+            text-align: left;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-content h3 {
+            margin: 0 0 12px;
+            color: var(--accent);
+            font-size: 24px;
+            font-weight: 500;
+        }
+
+        .modal-content p {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 0 0 24px;
+        }
+
+        .modal-btn {
+            background: var(--accent);
+            color: var(--accent-foreground);
+            border: none;
+            border-radius: 8px;
+            padding: 13px 26px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .modal-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* ============ ANIMAÇÕES ============ */
+        /* uma única entrada orquestrada */
+        .reveal {
+            animation: reveal 1s cubic-bezier(.2, .7, .2, 1) both;
+        }
+
+        .caixa-espera.reveal {
+            animation-delay: .25s;
+        }
+
+        @keyframes reveal {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes drift {
+            from {
+                transform: scale(1.03) translateY(0);
+            }
+
+            to {
+                transform: scale(1.09) translateY(-1%);
+            }
+        }
+
+        /* ============ RESPONSIVO ============ */
+        @media (max-width: 1000px) {
+            main {
+                grid-template-columns: 1fr;
+                gap: 48px;
+                padding: 24px 0 56px;
+            }
+
+            .caixa-espera {
+                max-width: 560px;
+            }
+
+            .countdown {
+                max-width: none;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .page {
+                padding: 0 22px;
+            }
+
+            .topline {
+                height: 76px;
+            }
+
+            .wordmark {
+                font-size: 13px;
+            }
+
+            .edition {
+                font-size: 11px;
+            }
+
+            .description {
+                font-size: 15px;
+            }
+
+            .countdown {
+                margin-top: 36px;
+            }
+
+            .time-box {
+                padding: 16px 0 14px 14px;
+            }
+
+            .time-box small {
+                font-size: 10px;
+            }
+
+            .stats {
+                gap: 32px;
+            }
+
+            .caixa-espera {
+                padding: 30px 22px 26px;
+                border-radius: 16px;
+            }
+
+            .caixa-espera h2 {
+                font-size: 24px;
+            }
+
+            .scene img {
+                object-position: 62% center;
+            }
+
+            footer {
+                flex-direction: column;
+                gap: 10px;
+                padding: 22px 0 26px;
+                font-size: 10px;
+            }
+
+            .footer-note:last-child {
+                text-align: left;
+            }
+        }
+
+        @media (max-width: 350px) {
+            .page {
+                padding: 0 16px;
+            }
+
+            .edition {
+                display: none;
+            }
+
+            .time-box span {
+                font-size: 30px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+
+        @supports not (backdrop-filter: blur(1px)) {
+            .glass {
+                background: var(--shade);
+            }
+
+            .email-input {
+                background: var(--shade);
+            }
+        }
+
+        /* ============ CAPTCHA "ZÍPER" — LUMME TRACKER ============ */
+        html:not(.verificado) body {
+            overflow: hidden;
+        }
+
+        .gate {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 26px;
+            padding: 24px;
+            text-align: center;
+            background: oklch(0.12 0.006 160 / .9);
+            backdrop-filter: blur(18px) saturate(140%);
+            transition: opacity .7s ease, visibility .7s ease;
+        }
+
+        .gate.saindo {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .verificado .gate {
+            display: none;
+        }
+
+        .gate-title {
+            margin: 0;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--accent);
+        }
+
+        .zip {
+            width: min(92vw, 900px);
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+            cursor: ew-resize;
+            border-radius: 12px;
+            outline: none;
+        }
+
+        .zip:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 8px;
+        }
+
+        .zip svg {
+            width: 100%;
+            height: auto;
+            display: block;
+            overflow: visible;
+        }
+
+        .zip text {
+            font-family: "Roboto", sans-serif;
+            font-weight: 900;
+            font-size: 110px;
+        }
+
+        .zip-silhueta {
+            fill: oklch(0.97 0.005 160 / .06);
+            stroke: oklch(0.97 0.005 160 / .38);
+            stroke-width: 1.5;
+        }
+
+        .zip-cor {
+            fill: url(#zipGrad);
+        }
+
+        .zip-dentes {
+            stroke: oklch(0.97 0.005 160 / .3);
+            stroke-width: 6;
+            stroke-dasharray: 3 6;
+        }
+
+        .zip-dentes-cor {
+            stroke: var(--accent);
+            stroke-width: 6;
+            stroke-dasharray: 3 6;
+        }
+
+        .stop-a {
+            stop-color: oklch(0.88 0.11 164);
+        }
+
+        .stop-b {
+            stop-color: oklch(0.78 0.14 215);
+        }
+
+        .zip-puxador {
+            transition: opacity .4s ease;
+        }
+
+        .zip-puxador line {
+            stroke: var(--accent);
+            stroke-width: 2;
+            opacity: .8;
+        }
+
+        .zip-puxador rect {
+            fill: var(--accent);
+        }
+
+        .zip-puxador circle {
+            fill: var(--accent-foreground);
+        }
+
+        .gate.completo .zip-puxador {
+            opacity: 0;
+        }
+
+        .gate.completo .zip-cor {
+            filter: drop-shadow(0 0 18px oklch(0.88 0.11 164 / .55));
+        }
+
+        .gate-status {
+            margin: 0;
+            min-height: 20px;
+            font-size: 14px;
+            color: var(--muted);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Evita o "piscar" do captcha se a pessoa já foi verificada nesta sessão -->
+    <script>
+        try {
+            if (sessionStorage.getItem('lumme_verificado') === '1') {
+                document.documentElement.classList.add('verificado');
+            }
+        } catch (e) { }
+    </script>
+
+    <!-- CAPTCHA: abra o zíper do nome para entrar -->
+    <div class="gate" id="gate" role="dialog" aria-modal="true" aria-label="Verificação de acesso">
+        <p class="gate-title">Verificação rápida</p>
+
+        <div class="zip" id="zip" tabindex="0" role="slider"
+            aria-label="Passe o dedo ou o mouse da esquerda para a direita sobre o nome para abrir o zíper. Com teclado, use a seta para a direita."
+            aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <svg viewBox="0 0 1000 175" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <defs>
+                    <linearGradient id="zipGrad" gradientUnits="userSpaceOnUse" x1="30" y1="0" x2="970" y2="0">
+                        <stop offset="0" class="stop-a" />
+                        <stop offset="1" class="stop-b" />
+                    </linearGradient>
+                    <clipPath id="zipClipPath">
+                        <rect id="zipClip" x="0" y="0" width="30" height="175" />
+                    </clipPath>
+                </defs>
+
+                <!-- Silhueta (parte "fechada") -->
+                <text class="zip-silhueta" x="30" y="105" textLength="940"
+                    lengthAdjust="spacingAndGlyphs">LUMME TRACKER</text>
+                <line class="zip-dentes" x1="30" y1="138" x2="970" y2="138" />
+
+                <!-- Parte colorida (revelada conforme o zíper abre) -->
+                <g clip-path="url(#zipClipPath)">
+                    <text class="zip-cor" x="30" y="105" textLength="940"
+                        lengthAdjust="spacingAndGlyphs">LUMME TRACKER</text>
+                    <line class="zip-dentes-cor" x1="30" y1="138" x2="970" y2="138" />
+                </g>
+
+                <!-- Puxador do zíper -->
+                <g class="zip-puxador" id="zipPull" transform="translate(30 0)">
+                    <line x1="0" y1="14" x2="0" y2="138" />
+                    <rect x="-12" y="124" width="24" height="42" rx="7" />
+                    <circle cx="0" cy="150" r="4" />
+                </g>
+            </svg>
+        </div>
+
+        <p class="gate-status" id="gateStatus" aria-live="polite">Carregando verificação...</p>
+    </div>
+
+    <div class="scene" aria-hidden="true">
+        <img src="./src/background.jpeg" alt="">
+    </div>
+
+    <!-- Modal / Pop-up de Sucesso -->
+    <div class="modal-overlay" id="successModal">
+        <div class="modal-content glass">
+            <h3>Você já está na fila! 🎉</h3>
+            <p>O seu e-mail foi registado com sucesso na nossa lista de espera. Enviámos uma confirmação para a sua
+                caixa de entrada.</p>
+            <button class="modal-btn" onclick="fecharModal()">Entendido</button>
+        </div>
+    </div>
+
+    <div class="page">
+        <header class="topline">
+            <div class="wordmark">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L2 22h20L12 2z"></path>
+                </svg>
+                Lançamento
+            </div>
+            <div class="edition">Edição de Verão</div>
+        </header>
+
+        <main>
+            <!-- Coluna esquerda: mensagem + temporizador + números -->
+            <section class="hero reveal">
+                <div class="status glass">
+                    <i></i> Acesso antecipado em breve
+                </div>
+
+                <h1>Um novo capítulo começa aqui.
+                    <span class="linha-marca">Marketing LUMME</span>
+                </h1>
+
+                <p class="description">O nosso novo produto está chegando. Junte-se à nossa lista de espera e seja um
+                    dos primeiros a experimentar a nova geração.</p>
+
+                <!-- Temporizador -->
+                <div class="countdown" id="countdown">
+                    <div class="time-box">
+                        <span id="cd-days">00</span>
+                        <small>Dias</small>
+                    </div>
+                    <div class="time-box">
+                        <span id="cd-hours">00</span>
+                        <small>Horas</small>
+                    </div>
+                    <div class="time-box">
+                        <span id="cd-minutes">00</span>
+                        <small>Minutos</small>
+                    </div>
+                    <div class="time-box">
+                        <span id="cd-seconds">00</span>
+                        <small>Segundos</small>
+                    </div>
+                </div>
+
+                <div class="stats">
+                    <p class="visits">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                        </svg>
+                        <span>Visualizações da página</span>
+                        <span id="visitas" class="spanVerde">...</span>
+                    </p>
+                    <p class="waitlist-count">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                        </svg>
+                        <span>Pessoas já na lista</span>
+                        <span id="cliques-espera" class="contador">...</span>
+                    </p>
+                </div>
+            </section>
+
+            <!-- Coluna direita: captura de e-mail -->
+            <section class="caixa-espera glass reveal">
+                <h2>Para mais informações, digite seu e-mail</h2>
+                <p class="apoio">Avisamos você assim que o acesso antecipado abrir.</p>
+
+                <form class="email-form" id="waitlistForm" onsubmit="enviarParaAWS(event)">
+                    <input type="email" class="email-input" id="emailInput" placeholder="Seu melhor e-mail" required>
+                    <button class="waitlist-button" type="submit" id="submitBtn">
+                        <span>Mais informações</span>
+                    </button>
+                </form>
+
+                <div class="lgpd-container">
+                    <label>
+                        <input type="checkbox" id="lgpd-consent">
+                        <span>Concordo em fornecer o meu e-mail para receber notificações sobre o lançamento do produto,
+                            compreendendo que os meus dados serão tratados conforme a LGPD.</span>
+                    </label>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <span class="footer-note">Design protegido &copy; 2026</span>
+            <span class="footer-note">"Os dados recolhidos (endereço de e-mail) destinam-se exclusivamente a notificá-lo
+                sobre o lançamento e acesso antecipado. Não partilhamos os seus dados com terceiros." &copy; 2026</span>
+        </footer>
+    </div>
+
+    <script src="./config.js"></script>
+    <script src="./main.js"></script>
+</body>
+
+</html>

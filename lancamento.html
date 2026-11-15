@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <title>O lançamento começou — LUMME Tracker</title>
+    <link rel="icon" href="./src/logo.png" type="image/png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100..900&display=swap" rel="stylesheet">
+
+    <style>
+        /* ============ PALETA (a mesma do index.html) ============ */
+        :root {
+            --background: oklch(0.12 0.006 160);
+            --foreground: oklch(0.97 0.005 160);
+            --muted: oklch(0.72 0.008 160);
+            --accent: oklch(0.88 0.11 164);
+            --accent-2: oklch(0.78 0.14 215);
+            --accent-foreground: oklch(0.18 0.026 160);
+            --glass: oklch(0.92 0.012 160 / .065);
+            --glass-hover: oklch(0.92 0.012 160 / .12);
+            --border: oklch(0.98 0.01 160 / .17);
+            --highlight: oklch(1 0 0 / .55);
+            --shade: oklch(0.08 0.004 160 / .65);
+            --shadow: oklch(0.04 0 0 / .3);
+            --font: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+        }
+
+        * { box-sizing: border-box; }
+        html { background: var(--background); }
+
+        body {
+            margin: 0;
+            color: var(--foreground);
+            font-family: var(--font);
+            min-width: 280px;
+            overflow-x: hidden;
+        }
+
+        ::selection { background: var(--accent); color: var(--accent-foreground); }
+
+        /* ============ FUNDO ============ */
+        .scene {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+            background: var(--background);
+        }
+
+        .scene img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            animation: drift 24s ease-in-out infinite alternate;
+        }
+
+        .scene::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(90deg, var(--shade), transparent 62%),
+                linear-gradient(180deg, var(--shade), transparent 35%, var(--shade));
+        }
+
+        @keyframes drift {
+            from { transform: scale(1.04) translate3d(0, 0, 0); }
+            to   { transform: scale(1.12) translate3d(-1.2%, -1%, 0); }
+        }
+
+        .glass {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(22px) saturate(145%);
+            box-shadow: inset 0 1px 0 var(--highlight), 0 12px 40px var(--shadow);
+        }
+
+        /* ============ ESTRUTURA ============ */
+        .page {
+            min-height: 100svh;
+            max-width: 1440px;
+            margin: auto;
+            padding: 0 56px 48px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topline {
+            height: 84px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .wordmark {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .wordmark svg { width: 24px; height: 24px; color: var(--accent); }
+
+        .edition {
+            color: var(--muted);
+            font-size: 12px;
+            padding-left: 16px;
+            border-left: 1px solid var(--border);
+        }
+
+        /* ============ CRONÔMETRO NO TOPO ============ */
+        .timer {
+            border-radius: 20px;
+            padding: 22px 32px 0;
+            overflow: hidden;
+            transition: box-shadow .6s ease, border-color .6s ease;
+        }
+
+        .timer-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .timer-head strong { color: var(--accent); font-weight: 500; }
+
+        .timer-digits {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: clamp(12px, 3vw, 40px);
+            padding: 18px 0 24px;
+        }
+
+        .digit-box { text-align: center; }
+
+        .digit-box span {
+            display: block;
+            font-size: clamp(48px, 10vw, 128px);
+            font-weight: 200;
+            line-height: 1;
+            letter-spacing: -0.02em;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .digit-box small {
+            display: block;
+            margin-top: 8px;
+            font-size: 12px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .12em;
+        }
+
+        .sep {
+            font-size: clamp(36px, 7vw, 88px);
+            font-weight: 100;
+            color: var(--accent);
+            line-height: 1;
+            padding-bottom: 28px;
+            animation: pisca 1s steps(2) infinite;
+        }
+
+        @keyframes pisca { 50% { opacity: .2; } }
+
+        .progress {
+            height: 3px;
+            margin: 0 -32px;
+            background: var(--border);
+        }
+
+        .progress i {
+            display: block;
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            box-shadow: 0 0 14px var(--accent);
+        }
+
+        /* Fase final: últimos 10 segundos */
+        .timer.final .digit-box span { color: var(--accent); }
+        .timer.final { border-color: var(--accent); box-shadow: 0 0 60px oklch(0.88 0.11 164 / .25); }
+
+        /* ============ CONTEÚDO ============ */
+        main {
+            flex: 1;
+            display: grid;
+            grid-template-columns: minmax(0, 1.15fr) minmax(320px, .85fr);
+            gap: 64px;
+            align-items: center;
+            padding: 56px 0 32px;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            border-radius: 30px;
+            padding: 9px 16px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--accent);
+        }
+
+        .status i {
+            width: 6px; height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pisca 1.4s ease-in-out infinite;
+        }
+
+        h1 {
+            margin: 28px 0 24px;
+            font-size: clamp(40px, 6vw, 88px);
+            line-height: 1.02;
+            font-weight: 300;
+            letter-spacing: -0.025em;
+            text-wrap: balance;
+        }
+
+        h1 .marca { display: block; font-weight: 600; color: var(--accent); }
+
+        .lead {
+            font-size: 18px;
+            line-height: 1.7;
+            color: var(--muted);
+            max-width: 560px;
+            margin: 0 0 20px;
+        }
+
+        .cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 12px;
+            padding: 16px 28px;
+            border-radius: 40px;
+            border: 1px solid var(--border);
+            background: var(--glass);
+            color: var(--foreground);
+            font: inherit;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background .25s ease, transform .25s ease;
+        }
+
+        .cta:hover { background: var(--glass-hover); transform: translateY(-2px); }
+
+        body.aberto .cta {
+            background: var(--accent);
+            color: var(--accent-foreground);
+            border-color: transparent;
+        }
+
+        /* Cartões "o que vem por aí" */
+        .cards { display: grid; gap: 16px; }
+
+        .card {
+            border-radius: 18px;
+            padding: 22px 24px;
+            display: grid;
+            grid-template-columns: 44px 1fr;
+            gap: 4px 18px;
+        }
+
+        .card .num {
+            grid-row: span 2;
+            font-size: 30px;
+            font-weight: 200;
+            color: var(--accent);
+            line-height: 1;
+        }
+
+        .card h3 { margin: 0; font-size: 17px; font-weight: 500; }
+        .card p  { margin: 0; font-size: 14px; line-height: 1.6; color: var(--muted); }
+
+        /* Linha do tempo */
+        .roadmap {
+            display: flex;
+            gap: 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            margin-top: 8px;
+        }
+
+        .step {
+            flex: 1;
+            padding: 18px 0 16px 20px;
+            border-left: 1px solid var(--border);
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .step:first-child { padding-left: 0; border-left: none; }
+        .step b { display: block; color: var(--foreground); font-weight: 500; font-size: 14px; margin-bottom: 2px; }
+        .step.on b { color: var(--accent); }
+
+        footer { color: var(--muted); font-size: 12px; padding-top: 8px; }
+
+        /* ============ EXPLOSÃO ============ */
+        #fx {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        .flash {
+            position: fixed;
+            inset: 0;
+            z-index: 49;
+            pointer-events: none;
+            opacity: 0;
+            background: radial-gradient(circle at var(--cx, 50%) var(--cy, 20%), #fff 0%, var(--accent) 30%, transparent 70%);
+        }
+
+        .flash.go { animation: flash 1.1s ease-out; }
+        @keyframes flash { 0% { opacity: 0; } 8% { opacity: 1; } 100% { opacity: 0; } }
+
+        .ring {
+            position: fixed;
+            left: var(--cx, 50%);
+            top: var(--cy, 20%);
+            width: 40px; height: 40px;
+            margin: -20px 0 0 -20px;
+            border-radius: 50%;
+            border: 2px solid var(--accent);
+            box-shadow: 0 0 40px var(--accent), inset 0 0 30px var(--accent);
+            z-index: 48;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        .ring.go { animation: ring 1.6s cubic-bezier(.1, .7, .2, 1) forwards; }
+        @keyframes ring { 0% { transform: scale(.2); opacity: 1; } 100% { transform: scale(60); opacity: 0; } }
+
+        body.shake .page { animation: shake .7s cubic-bezier(.36, .07, .19, .97); }
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-3px, 1px, 0); }
+            20%, 80% { transform: translate3d(6px, -2px, 0); }
+            30%, 50%, 70% { transform: translate3d(-10px, 3px, 0); }
+            40%, 60% { transform: translate3d(10px, -3px, 0); }
+        }
+
+        /* Estado "aberto" (depois da explosão) */
+        .timer .after { display: none; }
+        body.aberto .timer .before { display: none; }
+        body.aberto .timer .after { display: block; }
+
+        .after { text-align: center; padding: 22px 0 28px; }
+        .after .big {
+            font-size: clamp(32px, 6vw, 72px);
+            font-weight: 600;
+            color: var(--accent);
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+        .after .sub { margin-top: 8px; color: var(--muted); font-size: 14px; }
+        body.aberto .progress i { width: 100% !important; }
+        body.aberto .timer { border-color: var(--accent); }
+
+        /* ============ DROPDOWN + POP-UP (acesso antecipado) ============ */
+        .cta-wrap { position: relative; display: inline-block; }
+
+        .aa-painel {
+            position: absolute;
+            top: calc(100% + 12px);
+            left: 0;
+            z-index: 20;
+            width: 340px;
+            max-width: calc(100vw - 40px);
+            padding: 20px;
+            border-radius: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            animation: aa-desce .22s ease-out;
+        }
+
+        .aa-painel[hidden] { display: none; }
+
+        .aa-painel label { font-size: 13px; color: var(--muted); }
+
+        .aa-painel input {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: oklch(0.08 0.004 160 / .55);
+            color: var(--foreground);
+            font: inherit;
+            font-size: 16px;
+            outline: none;
+            transition: border-color .2s ease;
+        }
+
+        .aa-painel input::placeholder { color: var(--muted); opacity: .7; }
+        .aa-painel input:focus { border-color: var(--accent); }
+
+        .aa-enviar {
+            padding: 14px 24px;
+            border: 0;
+            border-radius: 40px;
+            background: var(--accent);
+            color: var(--accent-foreground);
+            font: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform .2s ease, opacity .2s ease;
+        }
+
+        .aa-enviar:hover { transform: translateY(-1px); }
+        .aa-enviar:disabled { opacity: .55; cursor: wait; transform: none; }
+
+        .aa-erro { margin: 0; min-height: 1.2em; font-size: 13px; color: oklch(0.75 0.15 25); }
+
+        .aa-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: oklch(0.04 0 0 / .7);
+            backdrop-filter: blur(6px);
+        }
+
+        .aa-modal[hidden] { display: none; }
+
+        .aa-modal-caixa {
+            width: 100%;
+            max-width: 400px;
+            padding: 32px 28px;
+            border-radius: 22px;
+            text-align: center;
+            background: oklch(0.18 0.008 160 / .85);
+            animation: aa-pop .25s ease-out;
+        }
+
+        .aa-modal-icone {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            font-weight: 600;
+            background: var(--accent);
+            color: var(--accent-foreground);
+            box-shadow: 0 0 40px oklch(0.88 0.11 164 / .35);
+        }
+
+        .aa-modal-icone.aviso {
+            background: oklch(0.78 0.14 70);
+            box-shadow: 0 0 40px oklch(0.78 0.14 70 / .3);
+        }
+
+        .aa-modal-caixa h3 { margin: 0 0 8px; font-size: 24px; font-weight: 500; }
+        .aa-modal-caixa p { margin: 0 0 24px; color: var(--muted); line-height: 1.6; }
+
+        @keyframes aa-desce { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+        @keyframes aa-pop { from { opacity: 0; transform: scale(.92); } to { opacity: 1; transform: scale(1); } }
+
+        /* ============ RESPONSIVO ============ */
+        @media (max-width: 900px) {
+            .page { padding: 0 20px 32px; }
+            main { grid-template-columns: 1fr; gap: 40px; padding-top: 40px; }
+            .timer { padding: 18px 18px 0; }
+            .progress { margin: 0 -18px; }
+            .roadmap { flex-direction: column; }
+            .step { border-left: none; border-top: 1px solid var(--border); padding-left: 0; }
+            .step:first-child { border-top: none; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .scene img, .sep, .status i { animation: none; }
+            body.shake .page { animation: none; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="scene" aria-hidden="true">
+        <img src="./src/background.jpeg" alt="">
+    </div>
+
+    <div class="flash" id="flash"></div>
+    <canvas id="fx" aria-hidden="true"></canvas>
+
+    <div class="page">
+        <header class="topline">
+            <div class="wordmark">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L2 22h20L12 2z"></path>
+                </svg>
+                LUMME Tracker
+            </div>
+            <div class="edition">Dia do lançamento</div>
+        </header>
+
+        <!-- CRONÔMETRO NO TOPO: 24h → 0 -->
+        <section class="timer glass" id="timer" aria-live="off">
+            <div class="before">
+                <div class="timer-head">
+                    <span>O acesso antecipado abre em</span>
+                    <strong id="alvoTexto">24 horas</strong>
+                </div>
+                <div class="timer-digits" role="timer" aria-label="Tempo restante para o acesso antecipado">
+                    <div class="digit-box"><span id="t-h">24</span><small>Horas</small></div>
+                    <div class="sep">:</div>
+                    <div class="digit-box"><span id="t-m">00</span><small>Minutos</small></div>
+                    <div class="sep">:</div>
+                    <div class="digit-box"><span id="t-s">00</span><small>Segundos</small></div>
+                </div>
+            </div>
+
+            <div class="after">
+                <div class="big">Acesso antecipado aberto</div>
+                <div class="sub">A LUMME Tracker já está no ar. Entre agora.</div>
+            </div>
+
+            <div class="progress"><i id="barra"></i></div>
+        </section>
+
+        <main>
+            <section>
+                <div class="status glass"><i></i> <span id="statusTxt">O lançamento começou</span></div>
+
+                <h1>O lançamento começou.
+                    <span class="marca">Veja o que vem por aí.</span>
+                </h1>
+
+                <p class="lead">A LUMME Tracker nasceu para mostrar, com clareza, quem está vendo a sua marca e o que
+                    funciona de verdade. Durante as próximas 24 horas, estamos finalizando os últimos detalhes
+                    para abrir o acesso antecipado.</p>
+                <p class="lead">Quem entrou na lista de espera será o primeiro a usar a plataforma, com condições
+                    exclusivas de lançamento.</p>
+
+                <div class="cta-wrap">
+                    <button type="button" class="cta" id="cta" aria-expanded="false" aria-controls="aa-painel">
+                        <span id="ctaTxt">Garantir meu lugar na lista</span>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14M13 6l6 6-6 6" />
+                        </svg>
+                    </button>
+
+                    <!-- DROPDOWN: e-mail do acesso antecipado -->
+                    <div class="aa-painel glass" id="aa-painel" hidden>
+                        <label for="aa-email">Seu melhor e-mail</label>
+                        <input id="aa-email" type="email" placeholder="voce@exemplo.com" autocomplete="email" maxlength="254">
+                        <button type="button" class="aa-enviar" id="aa-enviar">Enviar</button>
+                        <p class="aa-erro" id="aa-erro" role="alert"></p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cards">
+                <article class="card glass">
+                    <div class="num">01</div>
+                    <h3>Rastreie cada público</h3>
+                    <p>Descubra de onde vêm as pessoas que chegam até a sua marca e o que fazem em cada etapa da jornada.</p>
+                </article>
+                <article class="card glass">
+                    <div class="num">02</div>
+                    <h3>Campanhas em tempo real</h3>
+                    <p>Cliques, conversões e investimento num único painel, sempre atualizado.</p>
+                </article>
+                <article class="card glass">
+                    <div class="num">03</div>
+                    <h3>Relatórios que viram decisões</h3>
+                    <p>Resultados traduzidos em ação: o que manter, o que ajustar e onde investir a seguir.</p>
+                </article>
+
+                <div class="roadmap">
+                    <div class="step on" id="step1"><b>Agora</b>Lançamento oficial</div>
+                    <div class="step" id="step2"><b>Em 24h</b>Acesso antecipado para a lista de espera</div>
+                    <div class="step"><b>Depois</b>Abertura gradual ao público</div>
+                </div>
+            </section>
+        </main>
+
+        <footer>Design protegido &copy; 2026 · LUMME Tracker</footer>
+    </div>
+
+    <!-- POP-UP DE CONFIRMAÇÃO -->
+    <div class="aa-modal" id="aa-modal" hidden>
+        <div class="aa-modal-caixa glass" role="dialog" aria-modal="true" aria-labelledby="aa-modal-titulo">
+            <div class="aa-modal-icone" id="aa-modal-icone">✓</div>
+            <h3 id="aa-modal-titulo">Cadastrado!</h3>
+            <p id="aa-modal-texto">Seu e-mail foi registrado no acesso antecipado.</p>
+            <button type="button" class="aa-enviar" id="aa-modal-fechar">Fechar</button>
+        </div>
+    </div>
+
+    <script src="./config.js"></script>
+    <script>
+        // ============ ACESSO ANTECIPADO (dropdown + pop-up) ============
+        // Mesma lógica do main.js: em produção o CloudFront encaminha '/acessos' para o API Gateway
+        // (é por ele que chegam os headers de país/estado/cidade). Local, usa a URL direta do API Gateway.
+        const API_LOCAL = 'https://SEU-API-ID.execute-api.SUA-REGIAO.amazonaws.com/prod/acessos';
+        const ehLocal = ['localhost', '127.0.0.1', ''].includes(location.hostname);
+        const API_URL = ehLocal ? API_LOCAL : '/acessos';
+
+        const aa = {
+            cta: document.getElementById('cta'),
+            painel: document.getElementById('aa-painel'),
+            email: document.getElementById('aa-email'),
+            enviar: document.getElementById('aa-enviar'),
+            erro: document.getElementById('aa-erro'),
+            modal: document.getElementById('aa-modal')
+        };
+
+        function alternarPainel(abrir) {
+            aa.painel.hidden = !abrir;
+            aa.cta.setAttribute('aria-expanded', String(abrir));
+            if (abrir) aa.email.focus();
+        }
+
+        aa.cta.addEventListener('click', () => alternarPainel(aa.painel.hidden));
+
+        // Fecha o dropdown ao clicar fora
+        document.addEventListener('click', (e) => {
+            if (!aa.painel.hidden && !e.target.closest('.cta-wrap')) alternarPainel(false);
+        });
+
+        function mostrarModal(titulo, texto, sucesso) {
+            document.getElementById('aa-modal-titulo').textContent = titulo;
+            document.getElementById('aa-modal-texto').textContent = texto;
+            const icone = document.getElementById('aa-modal-icone');
+            icone.textContent = sucesso ? '✓' : '!';
+            icone.classList.toggle('aviso', !sucesso);
+            aa.modal.hidden = false;
+        }
+
+        const fecharModal = () => { aa.modal.hidden = true; };
+        document.getElementById('aa-modal-fechar').addEventListener('click', fecharModal);
+        aa.modal.addEventListener('click', (e) => { if (e.target === aa.modal) fecharModal(); });
+        document.addEventListener('keydown', (e) => {
+            if (e.key !== 'Escape') return;
+            fecharModal();
+            alternarPainel(false);
+        });
+
+        async function enviarEmail() {
+            aa.erro.textContent = '';
+            const email = aa.email.value.trim();
+
+            if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+                aa.erro.textContent = 'Digite um e-mail válido.';
+                return;
+            }
+
+            aa.enviar.disabled = true;
+            aa.enviar.textContent = 'Enviando...';
+
+            try {
+                const resp = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ acao: 'acesso_antecipado', email })
+                });
+                const dados = await resp.json().catch(() => ({}));
+
+                if (resp.ok) {
+                    aa.email.value = '';
+                    alternarPainel(false);
+                    mostrarModal('Cadastrado!', 'Seu e-mail foi registrado. Avisaremos você assim que o acesso antecipado abrir.', true);
+                } else if (resp.status === 409) {
+                    alternarPainel(false);
+                    mostrarModal('Você já está na lista', dados.error || 'Este e-mail já foi cadastrado.', false);
+                } else {
+                    aa.erro.textContent = dados.error || 'Não foi possível cadastrar. Tente novamente.';
+                }
+            } catch (err) {
+                aa.erro.textContent = 'Falha de conexão. Tente novamente.';
+            } finally {
+                aa.enviar.disabled = false;
+                aa.enviar.textContent = 'Enviar';
+            }
+        }
+
+        aa.enviar.addEventListener('click', enviarEmail);
+        aa.email.addEventListener('keydown', (e) => { if (e.key === 'Enter') enviarEmail(); });
+    </script>
+    <script>
+        // ============ CONFIG ============
+        // Mesmo horário do contador principal (main.js). O cronômetro desta página vai de 24h até 0.
+        // Os dois valores vêm do config.js, o mesmo arquivo que o main.js usa.
+        const LANCAMENTO = new Date(LUMME_CONFIG.lancamento).getTime();
+        const DURACAO = LUMME_CONFIG.duracaoMs;
+
+        // Modo teste: abra lancamento.html?demo=10 para ver a explosão em 10 segundos.
+        const params = new URLSearchParams(location.search);
+        const demo = parseInt(params.get('demo'), 10);
+        const emDemo = Number.isFinite(demo) && demo > 0;
+
+        const INICIO = emDemo ? Date.now() : LANCAMENTO;
+        const FIM = emDemo ? INICIO + demo * 1000 : LANCAMENTO + DURACAO;
+        const TOTAL = FIM - INICIO;
+
+        // Se alguém abrir esta página antes do lançamento, volta para a página principal.
+        if (!emDemo && Date.now() < LANCAMENTO) {
+            location.replace('./index.html');
+        }
+
+        // ============ CRONÔMETRO ============
+        const el = {
+            h: document.getElementById('t-h'),
+            m: document.getElementById('t-m'),
+            s: document.getElementById('t-s'),
+            barra: document.getElementById('barra'),
+            timer: document.getElementById('timer')
+        };
+        const pad = n => String(n).padStart(2, '0');
+        let explodiu = false;
+
+        function tick() {
+            const resta = FIM - Date.now();
+
+            if (resta <= 0) {
+                clearInterval(loop);
+                if (!explodiu) {
+                    explodiu = true;
+                    // Se a pessoa chegou muito depois do zero, mostra o estado final sem a explosão.
+                    const atrasoMs = -resta;
+                    atrasoMs < 5000 || emDemo ? explodir() : abrir(false);
+                }
+                return;
+            }
+
+            const total = Math.ceil(resta / 1000);
+            el.h.textContent = pad(Math.floor(total / 3600));
+            el.m.textContent = pad(Math.floor((total % 3600) / 60));
+            el.s.textContent = pad(total % 60);
+            el.barra.style.width = (100 - (resta / TOTAL) * 100) + '%';
+            el.timer.classList.toggle('final', total <= 10);
+        }
+
+        const loop = setInterval(tick, 250);
+        tick();
+
+        // ============ ESTADO FINAL ============
+        function abrir() {
+            document.body.classList.add('aberto');
+            document.getElementById('statusTxt').textContent = 'Acesso antecipado aberto';
+            document.getElementById('ctaTxt').textContent = 'Acessar agora';
+            document.getElementById('step2').classList.add('on');
+        }
+
+        // ============ EXPLOSÃO ============
+        const canvas = document.getElementById('fx');
+        const ctx = canvas.getContext('2d');
+        const cores = ['#8ff0c4', '#4fd3e6', '#ffffff', '#b9ffe0'];
+        let particulas = [];
+        let rodando = false;
+        const reduzir = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        function ajustar() {
+            const dpr = Math.min(devicePixelRatio || 1, 2);
+            canvas.width = innerWidth * dpr;
+            canvas.height = innerHeight * dpr;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+        addEventListener('resize', ajustar);
+        ajustar();
+
+        function emitir(x, y, qtd) {
+            for (let i = 0; i < qtd; i++) {
+                const ang = Math.random() * Math.PI * 2;
+                const vel = 2 + Math.random() * 13;
+                particulas.push({
+                    x, y,
+                    vx: Math.cos(ang) * vel,
+                    vy: Math.sin(ang) * vel,
+                    r: 1 + Math.random() * 3,
+                    vida: 1,
+                    queda: .004 + Math.random() * .014,
+                    cor: cores[(Math.random() * cores.length) | 0]
+                });
+            }
+        }
+
+        function animar() {
+            ctx.clearRect(0, 0, innerWidth, innerHeight);
+            ctx.globalCompositeOperation = 'lighter';
+
+            particulas = particulas.filter(p => p.vida > 0);
+            for (const p of particulas) {
+                p.vx *= .985;
+                p.vy = p.vy * .985 + .12;       // gravidade leve
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vida -= p.queda;
+
+                ctx.globalAlpha = Math.max(p.vida, 0);
+                ctx.fillStyle = p.cor;
+                ctx.shadowColor = p.cor;
+                ctx.shadowBlur = 12;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            if (particulas.length) {
+                requestAnimationFrame(animar);
+            } else {
+                rodando = false;
+                ctx.clearRect(0, 0, innerWidth, innerHeight);
+            }
+        }
+
+        function explodir() {
+            // Origem: centro do cronômetro
+            const r = el.timer.getBoundingClientRect();
+            const cx = r.left + r.width / 2;
+            const cy = r.top + r.height / 2;
+            const root = document.documentElement.style;
+            root.setProperty('--cx', cx + 'px');
+            root.setProperty('--cy', cy + 'px');
+
+            // Clarão + ondas de choque
+            const flash = document.getElementById('flash');
+            flash.classList.add('go');
+            [0, 180, 380].forEach(atraso => setTimeout(() => {
+                const ring = document.createElement('div');
+                ring.className = 'ring go';
+                document.body.appendChild(ring);
+                setTimeout(() => ring.remove(), 1700);
+            }, atraso));
+
+            // Tremor
+            if (!reduzir) {
+                document.body.classList.add('shake');
+                setTimeout(() => document.body.classList.remove('shake'), 800);
+            }
+
+            // Três ondas de partículas
+            const total = reduzir ? 60 : 1;
+            [0, 220, 480].forEach((atraso, i) => setTimeout(() => {
+                emitir(cx, cy, reduzir ? total : (i === 0 ? 260 : 160));
+                if (!rodando) { rodando = true; animar(); }
+            }, atraso));
+
+            // Troca o cronômetro pela mensagem final no pico do clarão
+            setTimeout(abrir, 350);
+        }
+    </script>
+</body>
+
+</html>
