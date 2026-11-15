@@ -76,6 +76,16 @@ Navegador ──► CloudFront ──► S3 (HTML/CSS/JS estáticos)
 
 HTML, CSS e JavaScript · AWS (API Gateway, Lambda, DynamoDB, CloudFront, S3, IAM) · AWS CDK
 
+## Equipe
+
+Projeto desenvolvido em grupo:
+
+- Evandro S. Biasini
+- Luana Bacelar
+- Lucas Rafael
+- Michelle de Lara
+- Ryan Nadab
+
 ## Segurança
 
 Nenhuma credencial, chave ou ID de conta está versionada. A URL do API Gateway é um placeholder, e as credenciais da AWS devem ficar sempre fora do repositório (variáveis de ambiente ou perfil do AWS CLI).
